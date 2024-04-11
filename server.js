@@ -1,0 +1,22 @@
+require("dotenv").config();
+const express = require("express");
+const app = express();
+const cookieParser = require("cookie-parser");
+const cors = require("cors");
+const { notFound, errHandler } = require("./middleware/errMiddleware");
+const { connectToDB } = require("./config/db");
+const path = require("path");
+const userRouter = require("./routers/userRouter");
+app.use(express.json());
+app.use(cookieParser());
+app.use(express.urlencoded({ extended: true }));
+app.use(cors());
+app.get("/", (req, res) => {
+  res.send("HELLO API");
+});
+app.use("/api/users", userRouter);
+app.use(notFound);
+app.use(errHandler);
+const PORT = process.env.PORT || 5000;
+connectToDB();
+app.listen(PORT, () => {});
